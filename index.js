@@ -1,7 +1,13 @@
-const fs = require("fs/promises");
-const path = require("path");
+const {
+  listContacts,
+  getContactById,
+  removeContact,
+  addContact,
+} = require("./contacts");
+
 const { Command } = require("commander");
 const program = new Command();
+
 program
   .option("-a, --action <type>", "choose action")
   .option("-i, --id <type>", "user id")
@@ -13,37 +19,37 @@ program.parse(process.argv);
 
 const argv = program.opts();
 
-const contactsPath = path.join(__dirname, "./db/contacts.json");
-
-async function listContacts() {
-  const contacts = await fs.readFile(contactsPath);
-  const parsedContacts = JSON.parse(contacts);
-  return parsedContacts;
-}
-
-function getContactById(contactId) {}
-
-function removeContact(contactId) {}
-
-function addContact(name, email, phone) {}
-
 async function invokeAction({ action, id, name, email, phone }) {
   switch (action) {
     case "list":
-      const contacts = await listContacts();
-      console.table(contacts);
+      try {
+        const contacts = await listContacts();
+        console.table(contacts);
+      } catch (err) {
+        console.error(err.message);
+      }
       break;
 
     case "get":
       // ... id
+      try {
+        const contact = await getContactById(id);
+        console.table(contact);
+      } catch (err) {
+        console.log(err.message);
+      }
       break;
 
     case "add":
       // ... name email phone
+      const newContact = await addContact(name, email, phone);
+      console.table(newContact);
       break;
 
     case "remove":
       // ... id
+      const removedContact = await removeContact(id);
+      console.table(removedContact);
       break;
 
     default:
