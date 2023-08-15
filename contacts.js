@@ -45,15 +45,15 @@ async function removeContact(contactId) {
 async function addContact(name, email, phone) {
   // Повертає об'єкт доданого контакту.
   if (!name) {
-    return "Name is required";
+    return "\x1B[31m Name is required";
   }
 
   if (!email) {
-    return "Email is required";
+    return "\x1B[31m Email is required";
   }
 
   if (!phone) {
-    return "Phone is required";
+    return "\x1B[31m Phone is required";
   }
 
   const data = await fs.readFile(contactsPath);
